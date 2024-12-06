@@ -1,7 +1,9 @@
 package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -12,14 +14,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name="tb_events")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Event {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     Long id;
 
     @NotNull
@@ -46,9 +50,16 @@ public class Event {
     @NotNull
     String longitude;
 
-    @Column(unique=true)
     @NotNull
     String description;
+
+    public Long getId(){
+        return id;
+    }
+
+    public String getName(){
+        return name;
+    }
 
 
 }

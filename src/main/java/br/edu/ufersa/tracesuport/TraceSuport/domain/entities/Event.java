@@ -1,6 +1,8 @@
-package br.edu.ufersa.tracesuport.TraceSuport.entities;
+package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -10,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+@Setter
+@Getter
 @Entity
 @Table(name="tb_events")
 public class Event {
@@ -45,4 +49,6 @@ public class Event {
     @Column(unique=true)
     @NotNull
     String description;
+
+
 }

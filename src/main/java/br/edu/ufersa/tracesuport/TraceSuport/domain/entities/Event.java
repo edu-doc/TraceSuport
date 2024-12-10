@@ -2,21 +2,12 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import org.antlr.v4.runtime.misc.NotNull;
-
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 import java.util.Objects;
-
 
 @Entity
 @Table(name="tb_events")

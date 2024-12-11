@@ -25,7 +25,6 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<?> createEvent(@RequestBody EventDTO eventDTO) {
-        ResponseEntity<EventDTO> response = new ResponseEntity<EventDTO>(eventService.criar(eventDTO), HttpStatus.OK);
-        return response;
+        return new ResponseEntity<EventDTO>(eventService.criar(eventDTO), HttpStatus.CREATED);
     }
 }

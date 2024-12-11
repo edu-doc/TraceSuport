@@ -7,9 +7,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="tb_events")
 public class Event {
 
@@ -17,118 +26,35 @@ public class Event {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
 
-    @NotNull
     String name;
 
-    @NotNull
     String city;
 
-    @NotNull
     String district;
 
-    @NotNull
     String address;
 
-    @NotNull
     String number;
 
-    @NotNull
     String phone;
 
-    @NotNull
     String latitude;
 
-    @NotNull
     String longitude;
 
-    @NotNull
     String description;
 
-    public Event(){}
-
-    public Event(EventDTO eventDTO){
-        setName(eventDTO.getName());
+    public Event (EventDTO eventDTO) {
         setId(eventDTO.getId());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        setName(eventDTO.getName());
+        setCity(eventDTO.getCity());
+        setDistrict(eventDTO.getDistrict());
+        setAddress(eventDTO.getAddress());
+        setNumber(eventDTO.getNumber());
+        setPhone(eventDTO.getPhone());
+        setLatitude(eventDTO.getLatitude());
+        setLongitude(eventDTO.getLongitude());
+        setDescription(eventDTO.getDescription());
     }
 
     @Override

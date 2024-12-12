@@ -14,16 +14,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserRequestDTO {
 
-    @NotNull
     @NotBlank
     private String name;
 
-    @NotNull
     @NotBlank
     @Email
     private String email;
 
-    @NotNull
     @NotBlank
     private String password;
 }

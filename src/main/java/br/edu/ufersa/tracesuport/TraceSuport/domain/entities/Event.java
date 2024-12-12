@@ -2,6 +2,7 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,25 +25,34 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
+    @NotBlank
+    private String name;
 
-    String city;
+    @NotBlank
+    private String city;
 
-    String district;
+    @NotBlank
+    private String district;
 
-    String address;
+    @NotBlank
+    private String address;
 
-    String number;
+    @NotBlank
+    private String number;
 
-    String phone;
+    @NotBlank
+    private String phone;
 
-    String latitude;
+    @NotBlank
+    private String latitude;
 
-    String longitude;
+    @NotBlank
+    private String longitude;
 
-    String description;
+    @NotBlank
+    private String description;
 
     public Event (EventDTO eventDTO) {
         setId(eventDTO.getId());

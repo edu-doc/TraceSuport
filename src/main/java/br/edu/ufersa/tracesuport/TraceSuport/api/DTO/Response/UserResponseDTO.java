@@ -13,6 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponseDTO {
+
     private Long id;
     private String name;
     private String email;
@@ -20,11 +21,11 @@ public class UserResponseDTO {
     private LocalDateTime updatedAt;
 
     public UserResponseDTO(User user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
+        setId(user.getId());
+        setName(user.getName());
+        setEmail(user.getEmail());
+        setCreatedAt(LocalDateTime.now());
+        setUpdatedAt(user.getUpdatedAt());
     }
 }
 

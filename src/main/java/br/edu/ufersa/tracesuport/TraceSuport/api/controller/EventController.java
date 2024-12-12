@@ -2,6 +2,7 @@ package br.edu.ufersa.tracesuport.TraceSuport.api.controller;
 
 import java.util.List;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.services.EventService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody EventDTO eventDTO) {
+    public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO) {
         return new ResponseEntity<EventDTO>(eventService.criar(eventDTO), HttpStatus.CREATED);
     }
 }

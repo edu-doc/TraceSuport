@@ -3,6 +3,7 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.services;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.EventRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class EventService {
                 .collect(Collectors.toList()); // Desde o Java 16, você pode usar toList() diretamente
     }
 
-    public EventDTO criar(EventDTO dto) {
+    public EventDTO criar(EventDTO dto) throws DataIntegrityViolationException {
         return new EventDTO(eventRepository.save(new Event(dto)));
     }
 

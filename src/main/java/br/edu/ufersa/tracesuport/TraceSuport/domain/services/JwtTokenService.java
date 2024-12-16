@@ -3,29 +3,23 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.services;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
-
 @Service
 public class JwtTokenService {
 
-    @Value("${jwt.secret-key}")
-    private static String SECRET_KEY;
+    private static String SECRET_KEY = "4Z^XrroxR@dWxqf$mTTKwW$!@#qGr4P";
 
-    @Value("${jwt.expiration-time}")
-    private static Long expirationTime;
+    private static Long expirationTime = 900000L;
 
     private static String ISSUER = "TraceSuport-api";
 
-    public String generateToken(User user) {
+    public String generateToken(UserDetails user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             return JWT.create()

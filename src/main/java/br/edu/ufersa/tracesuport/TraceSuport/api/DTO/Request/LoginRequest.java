@@ -1,7 +1,7 @@
 package br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request;
 
-import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.RolesEnum;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,18 +12,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDTO {
-
-    @NotBlank
-    private String name;
+public class LoginRequest {
 
     @NotBlank
     @Email
     private String email;
-
-    @NotBlank(message = "A Senha não pode ser vazia")   
+  
+    @NotBlank
+    @Min(6)
     private String password;
-
-    private RolesEnum role;
 }
-

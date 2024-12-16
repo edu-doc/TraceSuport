@@ -23,8 +23,8 @@ public class SecurityConfiguration {
     private UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-            "api/v1/login",
-            "api/v1/register"
+            "/api/v1/user/login",
+            "/api/v1/user/register",
     };
 
     public static final String [] ENDPOINTS_CUSTOMER = {
@@ -50,7 +50,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

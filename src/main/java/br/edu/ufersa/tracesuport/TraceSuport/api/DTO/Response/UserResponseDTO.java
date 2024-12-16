@@ -17,6 +17,7 @@ public class UserResponseDTO {
     private Long id;
     private String name;
     private String email;
+    private String role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -26,6 +27,7 @@ public class UserResponseDTO {
         setEmail(user.getEmail());
         setCreatedAt(LocalDateTime.now());
         setUpdatedAt(user.getUpdatedAt());
+        setRole(user.getRoles().get(0).getName().toString());
     }
 }
 

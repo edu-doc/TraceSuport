@@ -1,15 +1,17 @@
 package br.edu.ufersa.tracesuport.TraceSuport.domain.services;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.UserRequestDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.UserUpdateRequest;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.UserResponseDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.configuration.SecurityConfiguration;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Role;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -21,38 +23,44 @@ public class UserService implements UserDetailsService{
     }
 
     public UserResponseDTO create(UserRequestDTO request) {
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+            throw new IllegalArgumentException("Email já cadastrado");
+        });
+
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(SecurityConfiguration.passwordEncoder().encode(request.getPassword()))
+                .roles(List.of(Role.builder().name(request.getRole()).build()))
+                .build();
 
         user = userRepository.save(user);
 
         return new UserResponseDTO(user);
     }
 
-    public UserResponseDTO update(Long id, UserRequestDTO user) {
-        Optional<User> existingUser = userRepository.findById(id);
-        if (existingUser.isPresent()) {
-            User updatedUser = existingUser.get();
-            updatedUser.setName(user.getName());
-            updatedUser.setEmail(user.getEmail());
-            updatedUser.setPassword(user.getPassword());
-            updatedUser = userRepository.save(updatedUser);
+    public UserResponseDTO update(Long id, UserUpdateRequest request) {
+        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+            throw new IllegalArgumentException("Email já cadastrado");
+        });
+        
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        user.setName(request.getName().isBlank() ? user.getName() : request.getName());
+        user.setEmail(request.getEmail().isBlank() ? user.getEmail() : request.getEmail());
+        user = userRepository.save(user);
 
-            return new UserResponseDTO(updatedUser);
-        } else {
-            return null;
-        }
+        return new UserResponseDTO(user);
     }
 
-    public UserResponseDTO getUserById(Long id) {
-        UserResponseDTO response = new UserResponseDTO(userRepository.findById(id).get());
+    public UserResponseDTO getById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        return response;
+        return new UserResponseDTO(user);
     }
 
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
+        userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
         userRepository.deleteById(id);
     }
 

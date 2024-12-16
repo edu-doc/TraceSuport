@@ -10,14 +10,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    // Método para tratar exceções BadRequestException
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleBadRequestException(BadRequestException ex) {
@@ -26,7 +23,6 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
-    // Método para tratar exceções NotFoundException
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFoundException(NotFoundException ex) {
@@ -35,7 +31,6 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
-    // Método para tratar exceções de validação (MethodArgumentNotValidException)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -48,7 +43,6 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
-    // Método para tratar exceções gerais
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception ex) {
         Map<String, String> errorResponse = new HashMap<>();
@@ -56,12 +50,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Método para tratar AccessDeniedException
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Map<String, String> handleAccessDeniedException(AccessDeniedException ex) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "Access Denied: " + ex.getMessage());
+        return errorResponse;
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Map<String, String> handleInvalidTokenException(InvalidTokenException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Invalid access token: " + ex.getMessage());
         return errorResponse;
     }
 }

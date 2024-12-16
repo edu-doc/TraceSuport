@@ -23,8 +23,9 @@ public class SecurityConfiguration {
     private UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-            "/api/v1/user/login",
+            "/api/v1/auth/login",
             "/api/v1/user/register",
+            "/api/v1/auth/refreshToken"
     };
 
     public static final String [] ENDPOINTS_CUSTOMER = {

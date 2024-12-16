@@ -34,6 +34,12 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             if (token != null) {
                 String subject = jwtTokenService.getSubjectFromToken(token);
 
+                String type = jwtTokenService.getDecodedJWT(token).getClaim("type").asString();
+
+                if (!type.equals("access-token")) {
+                    throw new RuntimeException("o token não é válido para esse recurso");
+                }
+
                 User user = userRepository.findByEmail(subject).get();
 
                 UsernamePasswordAuthenticationToken authentication =

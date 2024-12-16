@@ -13,8 +13,8 @@ import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.LoginRequest;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.RefreshTokenRequest;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.LoginResponse;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.UserResponseDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.api.exceptions.InvalidTokenException;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
-import br.edu.ufersa.tracesuport.TraceSuport.domain.exceptions.InvalidTokenException;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.UserRepository;
 
 @Service

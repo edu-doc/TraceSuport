@@ -22,7 +22,7 @@ public class EventService {
         return eventRepository.findAll()
                 .stream()
                 .map(event -> new EventDTO(event))
-                .collect(Collectors.toList()); // Desde o Java 16, você pode usar toList() diretamente
+                .collect(Collectors.toList());
     }
 
     public EventDTO criar(EventDTO dto) throws DataIntegrityViolationException {

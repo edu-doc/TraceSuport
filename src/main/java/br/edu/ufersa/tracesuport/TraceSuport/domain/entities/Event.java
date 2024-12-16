@@ -3,7 +3,6 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -4,16 +4,21 @@ import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.UserRequestDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.UserResponseDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserResponseDTO create(UserRequestDTO request) {
         User user = new User();
@@ -49,6 +54,11 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
     }
 }
 

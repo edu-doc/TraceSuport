@@ -7,5 +7,4 @@ import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event,Long> {
-    public Event save(Event event);
 }

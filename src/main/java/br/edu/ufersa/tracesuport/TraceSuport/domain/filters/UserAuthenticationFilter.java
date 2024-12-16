@@ -33,6 +33,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             String token = recoveryToken(request);
             if (token != null) {
                 String subject = jwtTokenService.getSubjectFromToken(token);
+
                 User user = userRepository.findByEmail(subject).get();
 
                 UsernamePasswordAuthenticationToken authentication =

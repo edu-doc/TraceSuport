@@ -1,5 +1,6 @@
 package br.edu.ufersa.tracesuport.TraceSuport.api.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO request) {
-        return ResponseEntity.ok(userService.create(request));
+        return new ResponseEntity<UserResponseDTO>(userService.create(request), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

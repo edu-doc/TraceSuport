@@ -3,6 +3,7 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +30,7 @@ public class SecurityConfiguration {
     };
 
     public static final String [] ENDPOINTS_CUSTOMER = {
-            "api/v1/event"
+            "/api/v1/event"
     };
 
     @Bean
@@ -38,7 +39,9 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
-                    .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
+                    .requestMatchers(HttpMethod.GET, "/api/v1/event").authenticated()
+                    .requestMatchers(HttpMethod.POST, ENDPOINTS_CUSTOMER).hasAnyRole("ADMIN", "CUSTOMER")
+                    .requestMatchers("/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

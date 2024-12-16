@@ -12,6 +12,7 @@ import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.RefreshTokenRequest
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.LoginResponse;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.exceptions.InvalidTokenException;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.services.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -19,17 +20,20 @@ import jakarta.validation.Valid;
 public class AuthController {
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    private final HttpServletRequest httpServletRequest;
+
+    public AuthController(AuthService authService, HttpServletRequest httpServletRequest) {
         this.authService = authService;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        return new ResponseEntity<LoginResponse>(authService.login(request), HttpStatus.OK);
+        return new ResponseEntity<LoginResponse>(authService.login(request, httpServletRequest.getHeader("User-Agent")), HttpStatus.OK);
     }
 
     @PostMapping("refreshToken")
     public ResponseEntity<LoginResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) throws InvalidTokenException {
-        return new ResponseEntity<LoginResponse>(authService.refreshToken(request), HttpStatus.OK);
+        return new ResponseEntity<LoginResponse>(authService.refreshToken(request, httpServletRequest.getHeader("User-Agent")), HttpStatus.OK);
     }
 }

@@ -36,8 +36,14 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
                 String type = jwtTokenService.getDecodedJWT(token).getClaim("type").asString();
 
+                String userAgent = jwtTokenService.getDecodedJWT(token).getClaim("user-agent").asString();
+
+                if (!userAgent.equals(request.getHeader("User-Agent"))) {
+                    throw new RuntimeException("Token inválido");
+                }
+
                 if (!type.equals("access-token")) {
-                    throw new RuntimeException("o token não é válido para esse recurso");
+                    throw new RuntimeException("O token não é válido para esse recurso");
                 }
 
                 User user = userRepository.findByEmail(subject).get();

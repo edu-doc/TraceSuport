@@ -37,6 +37,22 @@ public class JwtTokenService {
         }
     }
 
+    public String generateToken(UserDetails user, String userAgent) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+            return JWT.create()
+                    .withIssuer(ISSUER)
+                    .withIssuedAt(creationDate())
+                    .withExpiresAt(expirationDate(accessTokenExpirationTime))
+                    .withSubject(user.getUsername())
+                    .withClaim("type", "access-token")
+                    .withClaim("user-agent", userAgent)
+                    .sign(algorithm);
+        } catch (JWTCreationException exception){
+            throw new JWTCreationException("Erro ao gerar token.", exception);
+        }
+    }
+
     public String generateRefreshToken(UserDetails user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
@@ -46,6 +62,22 @@ public class JwtTokenService {
                     .withExpiresAt(expirationDate(refreshTokenExpirationTime))
                     .withSubject(user.getUsername())
                     .withClaim("type", "refresh-token")
+                    .sign(algorithm);
+        } catch (JWTCreationException exception){
+            throw new JWTCreationException("Erro ao gerar token.", exception);
+        }
+    }
+
+    public String generateRefreshToken(UserDetails user, String userAgent) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+            return JWT.create()
+                    .withIssuer(ISSUER)
+                    .withIssuedAt(creationDate())
+                    .withExpiresAt(expirationDate(refreshTokenExpirationTime))
+                    .withSubject(user.getUsername())
+                    .withClaim("type", "refresh-token")
+                    .withClaim("user-agent", userAgent)
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new JWTCreationException("Erro ao gerar token.", exception);

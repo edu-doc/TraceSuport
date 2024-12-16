@@ -31,7 +31,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public LoginResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request, String userAgent) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
 
@@ -42,10 +42,10 @@ public class AuthService {
         User userEntity = userRepository.findByEmail(user.getUsername())
                                         .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        return new LoginResponse(jwtTokenService.generateToken(user), jwtTokenService.generateRefreshToken(userEntity), new UserResponseDTO(userEntity));
+        return new LoginResponse(jwtTokenService.generateToken(user, userAgent), jwtTokenService.generateRefreshToken(userEntity, userAgent), new UserResponseDTO(userEntity));
     }
 
-    public LoginResponse refreshToken(RefreshTokenRequest request) throws InvalidTokenException {
+    public LoginResponse refreshToken(RefreshTokenRequest request, String userAgent) throws InvalidTokenException {
         DecodedJWT token = jwtTokenService.getDecodedJWT(request.getRefreshToken());
 
         if (token == null) {
@@ -57,6 +57,6 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                                   .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
 
-        return new LoginResponse(jwtTokenService.generateToken(user), request.getRefreshToken(), new UserResponseDTO(user));
+        return new LoginResponse(jwtTokenService.generateToken(user, userAgent), request.getRefreshToken(), new UserResponseDTO(user));
     }
 }

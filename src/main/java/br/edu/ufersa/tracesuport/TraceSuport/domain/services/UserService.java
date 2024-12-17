@@ -6,6 +6,7 @@ import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.UserResponseDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.configuration.SecurityConfiguration;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Role;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.RolesEnum;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,7 +32,7 @@ public class UserService implements UserDetailsService{
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(SecurityConfiguration.passwordEncoder().encode(request.getPassword()))
-                .roles(List.of(Role.builder().name(request.getRole()).build()))
+                .roles(List.of(Role.builder().name(RolesEnum.ROLE_USER).build()))
                 .build();
 
         user = userRepository.save(user);

@@ -1,6 +1,5 @@
 package br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request;
 
-import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.RolesEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,7 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
-
     @NotBlank
     private String name;
 
@@ -25,7 +23,5 @@ public class UserRequestDTO {
     @NotBlank(message = "A Senha não pode ser vazia")
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     private String password;
-
-    private RolesEnum role;
 }
 

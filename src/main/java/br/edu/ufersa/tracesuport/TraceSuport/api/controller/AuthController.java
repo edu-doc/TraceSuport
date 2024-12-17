@@ -51,7 +51,7 @@ public class AuthController {
         return new ResponseEntity<UserResponseDTO>(userService.create(request), HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         return new ResponseEntity<LoginResponse>(authService.login(request, httpServletRequest.getHeader("User-Agent")), HttpStatus.OK);
     }

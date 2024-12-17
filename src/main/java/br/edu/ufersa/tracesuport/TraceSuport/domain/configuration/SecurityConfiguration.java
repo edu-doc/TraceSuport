@@ -25,8 +25,8 @@ public class SecurityConfiguration {
 
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/api/v1/auth/login",
-            "/api/v1/auth/register",
-            "/api/v1/auth/enterprise/register",
+            "/api/v1/user/register",
+            "/api/v1/enterprise/register",
             "/api/v1/auth/refreshToken"
     };
 
@@ -42,7 +42,6 @@ public class SecurityConfiguration {
                     .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/event").authenticated()
                     .requestMatchers(HttpMethod.POST, ENDPOINTS_CUSTOMER).hasAnyRole("ADMIN", "CUSTOMER")
-                    .requestMatchers("/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,7 +1,6 @@
 package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 
 import java.time.LocalDateTime;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -38,8 +37,8 @@ public class Enterprise {
     private String cnpj;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    private User owner;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

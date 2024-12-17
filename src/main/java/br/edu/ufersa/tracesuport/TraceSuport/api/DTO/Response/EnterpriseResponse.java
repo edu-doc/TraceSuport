@@ -23,6 +23,6 @@ public class EnterpriseResponse {
         this.id = enterprise.getId();
         this.name = enterprise.getName();
         this.cnpj = enterprise.getCnpj();
-        this.user = new UserResponseDTO(enterprise.getUser());
+        this.user = new UserResponseDTO(enterprise.getOwner());
     }
 }

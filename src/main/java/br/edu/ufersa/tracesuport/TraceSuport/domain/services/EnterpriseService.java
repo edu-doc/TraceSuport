@@ -42,11 +42,21 @@ public class EnterpriseService {
         Enterprise enterprise = Enterprise.builder()
                 .name(request.getEnterpriseName())
                 .cnpj(request.getCnpj())
-                .user(user)
+                .owner(user)
                 .build();
 
         enterprise = enterpriseRepository.save(enterprise);
 
         return new EnterpriseResponse(enterprise);
+    }
+
+    public EnterpriseResponse find(Long id) {
+        Enterprise enterprise = enterpriseRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada"));
+
+        return new EnterpriseResponse(enterprise);
+    }
+
+    public List<EnterpriseResponse> findAll() {
+        return enterpriseRepository.findAll().stream().map(EnterpriseResponse::new).toList();
     }
 }

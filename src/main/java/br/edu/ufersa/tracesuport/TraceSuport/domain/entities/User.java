@@ -21,6 +21,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +30,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Table(name = "users")
 @Entity
 @Getter
 @Setter
@@ -60,6 +63,10 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dependent_enterprise_id")
+    private Enterprise dependentEnterprise;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

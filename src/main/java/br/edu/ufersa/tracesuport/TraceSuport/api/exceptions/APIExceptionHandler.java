@@ -45,6 +45,18 @@ public class APIExceptionHandler {
         StringBuilder message = new StringBuilder("Erro de violação de integridade");
         message.append(ex.getMessage());
         Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Problema nos parâmetros enviados");
+        body.put("mensagem", message.toString().trim());
+        body.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        StringBuilder message = new StringBuilder("Erro argumento inválido ");
+        message.append(ex.getMessage());
+        Map<String, Object> body = new HashMap<>();
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.put("error", "Problema nos parâmetros enviados");
         body.put("mensagem", message.toString().trim());

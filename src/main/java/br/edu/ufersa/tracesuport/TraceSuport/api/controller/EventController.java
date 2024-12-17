@@ -28,4 +28,15 @@ public class EventController {
     public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO) {
         return new ResponseEntity<EventDTO>(eventService.criar(eventDTO), HttpStatus.CREATED);
     }
+
+    @GetMapping("/coordinates/{id}")
+    public ResponseEntity<?> getCoordinates(@PathVariable Long id) {
+        return new ResponseEntity<>(eventService.obterCoordenadas(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteEvent(@PathVariable Long id) {
+        return new ResponseEntity<>(eventService.deletar(id), HttpStatus.OK);
+    }
+
 }

@@ -29,6 +29,11 @@ public class EventController {
         return new ResponseEntity<EventDTO>(eventService.criar(eventDTO), HttpStatus.CREATED);
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateEvent(@Valid @RequestBody EventDTO eventDTO) {
+        return new ResponseEntity<EventDTO>(eventService.atualizar(eventDTO), HttpStatus.OK);
+    }    
+
     @GetMapping("/coordinates/{id}")
     public ResponseEntity<?> getCoordinates(@PathVariable Long id) {
         return new ResponseEntity<>(eventService.obterCoordenadas(id), HttpStatus.OK);

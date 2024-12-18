@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,12 +31,25 @@ public class EventService {
         return new EventDTO(eventRepository.save(new Event(dto)));
     }
 
+    public EventDTO atualizar(EventDTO dto) throws DataIntegrityViolationException {
+
+            // Verifica se a questão com o ID especificado existe
+            Optional<Event> existingEvent = eventRepository.findById(dto.getId());
+    
+            if (existingEvent.isEmpty()) {
+                throw new RuntimeException("Evento não encontrado");
+            }
+    
+            return new EventDTO(eventRepository.save(new Event(dto)));
+    }
+
     public CoordinatesDTO obterCoordenadas(Long id){
         return eventRepository.findById(id)
                 .map(event -> new CoordinatesDTO(event.getLatitude(), event.getLongitude()))
                 .orElseThrow(() -> new IllegalArgumentException("não possui chamado com esse ID"));
 
     }
+
 
     public EventDTO deletar(Long id) throws DataIntegrityViolationException {
         return eventRepository.findById(id)

@@ -49,7 +49,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                 User user = userRepository.findByEmail(subject).get();
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {

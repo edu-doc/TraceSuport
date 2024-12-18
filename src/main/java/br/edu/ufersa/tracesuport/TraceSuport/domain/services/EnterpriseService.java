@@ -30,6 +30,10 @@ public class EnterpriseService {
             throw new IllegalArgumentException("Email já cadastrado");
         });
 
+        enterpriseRepository.findByCnpj(request.getCnpj()).ifPresent(enterprise -> {
+            throw new IllegalArgumentException("Cnpj já cadastrado");
+        });
+
         User user = User.builder()
                 .name(request.getOwnerName())
                 .email(request.getEmail())

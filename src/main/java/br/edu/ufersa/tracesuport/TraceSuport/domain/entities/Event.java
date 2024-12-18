@@ -2,11 +2,13 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,32 +28,36 @@ public class Event {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String name;
 
-    @NotBlank
+    @Column(nullable = false)
     private String city;
 
-    @NotBlank
+    @Column(nullable = false)
     private String district;
 
-    @NotBlank
+    @Column(nullable = false)
     private String address;
 
-    @NotBlank
+    @Column(nullable = false)
     private String number;
 
-    @NotBlank
+    @Column(nullable = false)
     private String phone;
 
-    @NotBlank
+    @Column(nullable = false)
     private String latitude;
 
-    @NotBlank
+    @Column(nullable = false)
     private String longitude;
 
-    @NotBlank
+    @Column(nullable = false)
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "enterprise_id", nullable = false, referencedColumnName = "id")
+    private Enterprise enterprise;
 
     public Event (EventDTO eventDTO) {
         setId(eventDTO.getId());

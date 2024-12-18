@@ -1,6 +1,8 @@
 package br.edu.ufersa.tracesuport.TraceSuport.api.controller;
 
 import java.util.List;
+
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.CoordinatesDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,12 +38,12 @@ public class EventController {
 
     @GetMapping("/coordinates/{id}")
     public ResponseEntity<?> getCoordinates(@PathVariable Long id) {
-        return new ResponseEntity<>(eventService.obterCoordenadas(id), HttpStatus.OK);
+        return new ResponseEntity<CoordinatesDTO>(eventService.obterCoordenadas(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEvent(@PathVariable Long id) {
-        return new ResponseEntity<>(eventService.deletar(id), HttpStatus.OK);
+        return new ResponseEntity<EventDTO>(eventService.deletar(id), HttpStatus.OK);
     }
 
 }

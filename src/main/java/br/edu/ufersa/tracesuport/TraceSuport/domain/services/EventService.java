@@ -31,13 +31,12 @@ public class EventService {
         return new EventDTO(eventRepository.save(new Event(dto)));
     }
 
-    public EventDTO atualizar(EventDTO dto) throws DataIntegrityViolationException {
+    public EventDTO atualizar(EventDTO dto) throws IllegalArgumentException {
 
-            // Verifica se a questão com o ID especificado existe
             Optional<Event> existingEvent = eventRepository.findById(dto.getId());
     
             if (existingEvent.isEmpty()) {
-                throw new RuntimeException("Evento não encontrado");
+                throw new IllegalArgumentException("chamado não encontrado com esse ID");
             }
     
             return new EventDTO(eventRepository.save(new Event(dto)));

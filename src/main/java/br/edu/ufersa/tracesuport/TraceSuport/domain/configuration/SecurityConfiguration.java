@@ -41,6 +41,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/event").authenticated()
+                    .requestMatchers(HttpMethod.PUT, ENDPOINTS_CUSTOMER).hasAnyRole("ADMIN", "CUSTOMER")
                     .requestMatchers(HttpMethod.POST, ENDPOINTS_CUSTOMER).hasAnyRole("ADMIN", "CUSTOMER")
                     .anyRequest().authenticated()
                 )

@@ -113,12 +113,4 @@ public class APIExceptionHandler {
         errorResponse.put("error", "Token de acesso inválido: " + ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Argumento inválido: " + ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
 }

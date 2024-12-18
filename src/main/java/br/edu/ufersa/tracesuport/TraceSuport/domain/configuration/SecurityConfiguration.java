@@ -31,7 +31,8 @@ public class SecurityConfiguration {
     };
 
     public static final String [] ENDPOINTS_CUSTOMER = {
-            "/api/v1/event"
+            "/api/v1/event",
+            "/api/v1/event/**"
     };
 
     @Bean
@@ -43,6 +44,7 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.GET, "/api/v1/event").authenticated()
                     .requestMatchers(HttpMethod.PUT, ENDPOINTS_CUSTOMER).hasAnyRole("ADMIN", "CUSTOMER")
                     .requestMatchers(HttpMethod.POST, ENDPOINTS_CUSTOMER).hasAnyRole("ADMIN", "CUSTOMER")
+                    .requestMatchers(HttpMethod.DELETE, ENDPOINTS_CUSTOMER).hasAnyRole("ADMIN", "CUSTOMER")
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

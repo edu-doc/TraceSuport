@@ -22,8 +22,7 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<?> getEvents() {
-        ResponseEntity<List<EventDTO>> response = new ResponseEntity<List<EventDTO>>(eventService.listar(), HttpStatus.OK);
-        return response;
+        return new ResponseEntity<List<EventDTO>>(eventService.listar(), HttpStatus.OK);
     }
 
     @GetMapping("/coordinatesProximas/{id}")

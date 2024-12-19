@@ -7,11 +7,12 @@ import lombok.Setter;
 @Getter
 public class CoordinatesDTO {
 
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 
-    public CoordinatesDTO(String latitude, String longitude) {
+    public CoordinatesDTO(Double latitude, Double longitude) {
         setLatitude(latitude);
         setLongitude(longitude);
     }
+
 }

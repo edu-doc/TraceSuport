@@ -26,6 +26,11 @@ public class EventController {
         return response;
     }
 
+    @GetMapping("/coordinatesProximas/{id}")
+    public ResponseEntity<?> getCoordinatesProximas(@PathVariable Long id) {
+        return new ResponseEntity<CoordinatesDTO>(eventService.maisProximo(id), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO) {
         return new ResponseEntity<EventDTO>(eventService.criar(eventDTO), HttpStatus.CREATED);

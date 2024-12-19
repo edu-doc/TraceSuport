@@ -90,4 +90,54 @@ public class EventService {
                 .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado"));
     }
 
+    public CoordinatesDTO maisProximo (Long id) throws IllegalArgumentException{
+
+        Event eventoReferencia = eventRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado com esse ID"));
+
+        CoordinatesDTO coordenadaReferencia = new CoordinatesDTO(eventoReferencia.getLatitude(), eventoReferencia.getLongitude());
+
+        List<CoordinatesDTO> coordenadas = eventRepository.findByEnterprise(eventoReferencia.getEnterprise())
+                .stream()
+                .filter(evento -> !evento.getId().equals(id)) // Excluir o evento de referência da busca
+                .map(evento -> new CoordinatesDTO(evento.getLatitude(), evento.getLongitude()))
+                .collect(Collectors.toList());
+
+        return coordenadasProxima(coordenadaReferencia, coordenadas);
+    }
+
+    private CoordinatesDTO coordenadasProxima(CoordinatesDTO minhaLocalizacao, List<CoordinatesDTO> coordenadas){
+
+        CoordinatesDTO maisProxima = null;
+        double menorDistancia = Double.MAX_VALUE;
+
+        for (CoordinatesDTO coordenada : coordenadas) {
+            double distancia = calcularDistancia(
+                    minhaLocalizacao,
+                    coordenada
+            );
+
+            if (distancia < menorDistancia) {
+                menorDistancia = distancia;
+                maisProxima = coordenada;
+            }
+        }
+
+        return maisProxima;
+
+    }
+
+    private double calcularDistancia(CoordinatesDTO dt1, CoordinatesDTO dt2) {
+
+        final int RAIO_TERRA_KM = 6371; // Raio médio da Terra em km
+
+        double dLat = Math.toRadians(dt2.getLatitude() - dt1.getLatitude());
+        double dLon = Math.toRadians(dt2.getLongitude() - dt1.getLongitude());
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(dt1.getLatitude())) * Math.cos(Math.toRadians(dt2.getLatitude())) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return RAIO_TERRA_KM * c;
+    }
+
 }

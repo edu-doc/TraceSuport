@@ -2,6 +2,7 @@ package br.edu.ufersa.tracesuport.TraceSuport.api.DTO;
 
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,11 +34,11 @@ public class EventDTO {
     @NotBlank
     private String phone;
 
-    @NotBlank
-    private String latitude;
+    @NotNull
+    private Double latitude;
 
-    @NotBlank
-    private String longitude;
+    @NotNull
+    private Double longitude;
 
     @NotBlank
     private String description;

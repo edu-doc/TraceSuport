@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+
 import br.edu.ufersa.tracesuport.TraceSuport.domain.configuration.SecurityConfiguration;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.UserRepository;
@@ -29,32 +31,40 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (checkIfEndpointIsNotPublic(request)) {
-            String token = recoveryToken(request);
-            if (token != null) {
-                String subject = jwtTokenService.getSubjectFromToken(token);
+        try {
+            if (checkIfEndpointIsNotPublic(request)) {
+                String token = recoveryToken(request);
+                if (token != null) {
+                    String subject = jwtTokenService.getSubjectFromToken(token);
 
-                String type = jwtTokenService.getDecodedJWT(token).getClaim("type").asString();
+                    String type = jwtTokenService.getDecodedJWT(token).getClaim("type").asString();
 
-                String userAgent = jwtTokenService.getDecodedJWT(token).getClaim("user-agent").asString();
+                    String userAgent = jwtTokenService.getDecodedJWT(token).getClaim("user-agent").asString();
 
-                if (!userAgent.equals(request.getHeader("User-Agent"))) {
-                    throw new RuntimeException("Token inválido");
+                    if (!userAgent.equals(request.getHeader("User-Agent"))) {
+                        throw new RuntimeException("Token inválido");
+                    }
+
+                    if (!type.equals("access-token")) {
+                        throw new RuntimeException("O token não é válido para esse recurso");
+                    }
+
+                    User user = userRepository.findByEmail(subject).get();
+
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    throw new RuntimeException("O token está ausente.");
                 }
-
-                if (!type.equals("access-token")) {
-                    throw new RuntimeException("O token não é válido para esse recurso");
-                }
-
-                User user = userRepository.findByEmail(subject).get();
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                throw new RuntimeException("O token está ausente.");
             }
+        } catch (JWTVerificationException e) {
+            response.setStatus(401);
+
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token inválido\", \"status\": 401}");
+            return;
         }
         filterChain.doFilter(request, response);
     }

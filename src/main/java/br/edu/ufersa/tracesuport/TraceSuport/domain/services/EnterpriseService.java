@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.EnterpriseRequest;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.EnterpriseResponse;
+import br.edu.ufersa.tracesuport.TraceSuport.api.exceptions.IllegalFieldException;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.configuration.SecurityConfiguration;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Enterprise;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Role;
@@ -27,11 +28,11 @@ public class EnterpriseService {
     @Transactional(rollbackOn = Exception.class)
     public EnterpriseResponse create(EnterpriseRequest request) {
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            throw new IllegalArgumentException("Email já cadastrado");
+            throw new IllegalFieldException("Email já cadastrado", "email");
         });
 
         enterpriseRepository.findByCnpj(request.getCnpj()).ifPresent(enterprise -> {
-            throw new IllegalArgumentException("Cnpj já cadastrado");
+            throw new IllegalFieldException("Cnpj já cadastrado", "cnpj");
         });
 
         User user = User.builder()

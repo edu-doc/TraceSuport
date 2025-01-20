@@ -32,8 +32,21 @@ public class APIExceptionHandler {
 
         Map<String, Object> response = new HashMap<>();
         response.put("mensagem", "Erro(s) de validação");
-        response.put("erros", errorMessages);
+        response.put("errors", errorMessages);
         response.put("error", "Problema nos parâmetros enviados");
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("timestamp", LocalDateTime.now());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalFieldException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalFieldException(IllegalFieldException ex) {
+        Map<String, String> errorMessage = new HashMap<>();
+        errorMessage.put(ex.getField(), ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("mensagem", "Erro de validação");
+        response.put("errors", errorMessage);
         response.put("status", HttpStatus.BAD_REQUEST.value());
         response.put("timestamp", LocalDateTime.now());
 
@@ -57,11 +70,11 @@ public class APIExceptionHandler {
         StringBuilder message = new StringBuilder("Erro argumento inválido ");
         message.append(ex.getMessage());
         Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", "Problema nos parâmetros enviados");
         body.put("mensagem", message.toString().trim());
         body.put("timestamp", LocalDateTime.now());
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RuntimeException.class)

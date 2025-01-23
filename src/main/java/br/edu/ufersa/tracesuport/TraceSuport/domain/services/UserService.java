@@ -40,6 +40,7 @@ public class UserService implements UserDetailsService{
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
+                .cpf(request.getCpf())
                 .password(SecurityConfiguration.passwordEncoder().encode(request.getPassword()))
                 .roles(List.of(Role.builder().name(RolesEnum.ROLE_USER).build()))
                 .dependentEnterprise(enterprise)

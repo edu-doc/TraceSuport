@@ -1,5 +1,7 @@
 package br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +22,10 @@ public class UserRequestDTO {
     @NotBlank
     @Email(message = "O email deve ser válido")
     private String email;
+
+    @NotBlank
+    @CPF(message = "O CPF deve ser válido")
+    private String cpf;
 
     @NotNull(message = "O usuario deve ser associado a uma empresa")
     private Long enterpriseId;

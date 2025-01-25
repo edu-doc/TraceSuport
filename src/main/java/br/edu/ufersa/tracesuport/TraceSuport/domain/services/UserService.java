@@ -33,6 +33,10 @@ public class UserService implements UserDetailsService{
             throw new IllegalArgumentException("Email já cadastrado");
         });
 
+        userRepository.findByCpf(request.getCpf()).ifPresent(user -> {
+            throw new IllegalArgumentException("CPF já cadastrado");
+        });
+
         Enterprise enterprise = enterpriseRepository.findById(request.getEnterpriseId()).orElseThrow(() -> {
             throw new IllegalArgumentException("Empresa não encontrada");
         });

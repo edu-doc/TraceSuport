@@ -18,6 +18,7 @@ public class UserResponseDTO {
     private String name;
     private String email;
     private String role;
+    private String photoPath;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -28,6 +29,7 @@ public class UserResponseDTO {
         setCreatedAt(LocalDateTime.now());
         setUpdatedAt(user.getUpdatedAt());
         setRole(user.getRoles().get(0).getName().toString());
+        setPhotoPath(user.getPhotoPath());
     }
 }
 

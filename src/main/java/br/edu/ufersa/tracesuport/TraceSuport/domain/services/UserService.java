@@ -3,6 +3,7 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.services;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.UserRequestDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.UserUpdateRequest;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.UserResponseDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.api.exceptions.IllegalFieldException;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.configuration.SecurityConfiguration;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Enterprise;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Role;
@@ -10,10 +11,12 @@ import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.RolesEnum;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.EnterpriseRepository;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.UserRepository;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.utils.FileUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -28,27 +31,30 @@ public class UserService implements UserDetailsService{
         this.enterpriseRepository = enterpriseRepository;
     }
 
-    public UserResponseDTO create(UserRequestDTO request) {
+    public UserResponseDTO create(UserRequestDTO request) throws IOException {
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            throw new IllegalArgumentException("Email já cadastrado");
+            throw new IllegalFieldException("Email já cadastrado", "email");
         });
 
         userRepository.findByCpf(request.getCpf()).ifPresent(user -> {
-            throw new IllegalArgumentException("CPF já cadastrado");
+            throw new IllegalFieldException("CPF já cadastrado", "cpf");
         });
 
         Enterprise enterprise = enterpriseRepository.findById(request.getEnterpriseId()).orElseThrow(() -> {
-            throw new IllegalArgumentException("Empresa não encontrada");
+            throw new IllegalFieldException("Empresa não encontrada", "enterpriseId");
         });
 
+        String filePath = FileUtils.saveFile("/user_photos", request.getPhoto());
+
         User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .cpf(request.getCpf())
-                .password(SecurityConfiguration.passwordEncoder().encode(request.getPassword()))
-                .roles(List.of(Role.builder().name(RolesEnum.ROLE_USER).build()))
-                .dependentEnterprise(enterprise)
-                .build();
+                        .name(request.getName())
+                        .email(request.getEmail())
+                        .cpf(request.getCpf())
+                        .password(SecurityConfiguration.passwordEncoder().encode(request.getPassword()))
+                        .photoPath(filePath)
+                        .roles(List.of(Role.builder().name(RolesEnum.ROLE_USER).build()))
+                        .dependentEnterprise(enterprise)
+                        .build();
 
         user = userRepository.save(user);
 

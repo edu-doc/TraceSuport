@@ -54,6 +54,9 @@ public class User implements UserDetails {
 
     @NotNull
     private String password;
+
+    @Column(nullable = true)
+    private String photoPath;
     
     @CreationTimestamp
     private LocalDateTime createdAt;

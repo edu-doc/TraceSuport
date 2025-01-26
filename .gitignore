@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 application.properties
+user_photos
 
 ### STS ###
 .apt_generated

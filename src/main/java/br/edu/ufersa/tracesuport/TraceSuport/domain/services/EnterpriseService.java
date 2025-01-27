@@ -1,9 +1,13 @@
 package br.edu.ufersa.tracesuport.TraceSuport.domain.services;
 
 import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.EnterpriseRequest;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.EnterpriseResponse;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.UserResponseDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.api.exceptions.IllegalFieldException;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.configuration.SecurityConfiguration;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Enterprise;
@@ -63,5 +67,16 @@ public class EnterpriseService {
 
     public List<EnterpriseResponse> findAll() {
         return enterpriseRepository.findAll().stream().map(EnterpriseResponse::new).toList();
+    }
+
+    public List<UserResponseDTO> listAllEmployees() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = (User) authentication.getPrincipal();
+
+        Enterprise enterprise = enterpriseRepository.findByOwner(user).get(); 
+
+        return userRepository.findByDependentEnterprise(enterprise).orElseThrow(() -> new IllegalArgumentException("Nenhum funcionário encontrado"))
+                .stream().map(UserResponseDTO::new).toList();
     }
 }

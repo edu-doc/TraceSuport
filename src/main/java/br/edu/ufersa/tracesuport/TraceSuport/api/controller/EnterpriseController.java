@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Request.EnterpriseRequest;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.EnterpriseResponse;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.UserResponseDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.services.EnterpriseService;
 import jakarta.validation.Valid;
 
@@ -33,6 +34,11 @@ public class EnterpriseController {
     @GetMapping("{id}")
     public EnterpriseResponse find(@PathVariable Long id) {
         return enterpriseService.find(id);
+    }
+
+    @GetMapping("employees")
+    public List<UserResponseDTO> listAllEmployees() {
+        return enterpriseService.listAllEmployees();
     }
 
     @GetMapping

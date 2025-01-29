@@ -25,6 +25,11 @@ public class EventController {
         return new ResponseEntity<List<EventDTO>>(eventService.listar(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getEvent(@PathVariable Long id) {
+        return new ResponseEntity<EventDTO>(eventService.get(id), HttpStatus.OK);
+    }
+
     @GetMapping("/coordinatesProximas/{id}")
     public ResponseEntity<?> getCoordinatesProximas(@PathVariable Long id) {
         return new ResponseEntity<CoordinatesDTO>(eventService.maisProximo(id), HttpStatus.OK);
@@ -35,9 +40,9 @@ public class EventController {
         return new ResponseEntity<EventDTO>(eventService.criar(eventDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<?> updateEvent(@Valid @RequestBody EventDTO eventDTO) {
-        return new ResponseEntity<EventDTO>(eventService.atualizar(eventDTO), HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateEvent(@Valid @RequestBody EventDTO eventDTO, @PathVariable Long id) {
+        return new ResponseEntity<EventDTO>(eventService.atualizar(eventDTO, id), HttpStatus.OK);
     }    
 
     @GetMapping("/coordinates/{id}")

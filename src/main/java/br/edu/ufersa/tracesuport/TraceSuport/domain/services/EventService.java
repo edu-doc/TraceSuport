@@ -62,14 +62,27 @@ public class EventService {
         return new EventDTO(eventRepository.save(event));
     }
 
-    public EventDTO atualizar(EventDTO dto) throws IllegalArgumentException {
-        Optional<Event> existingEvent = eventRepository.findById(dto.getId());
+    public EventDTO get(Long id) {
+        return eventRepository.findById(id)
+                .map(event -> new EventDTO(event))
+                .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado"));
+    }
 
-        if (existingEvent.isEmpty()) {
-            throw new IllegalArgumentException("chamado não encontrado com esse ID");
-        }
+    public EventDTO atualizar(EventDTO dto, Long id) throws IllegalArgumentException {
+        Event event = eventRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado com esse ID"));
 
-        return new EventDTO(eventRepository.save(new Event(dto)));
+        event.setName(dto.getName());
+        event.setDescription(dto.getDescription());
+        event.setLatitude(dto.getLatitude());
+        event.setLongitude(dto.getLongitude());
+        event.setCity(dto.getCity());
+        event.setDistrict(dto.getDistrict());
+        event.setAddress(dto.getAddress());
+        event.setNumber(dto.getNumber());
+        event.setPhone(dto.getPhone());
+
+        return new EventDTO(eventRepository.save(event));
     }
 
     public CoordinatesDTO obterCoordenadas(Long id){
@@ -79,15 +92,31 @@ public class EventService {
 
     }
 
-
     public EventDTO deletar(Long id) throws DataIntegrityViolationException {
-        return eventRepository.findById(id)
-                .map(event -> {
-                    EventDTO deleteDto = new EventDTO(event);
-                    eventRepository.delete(event);
-                    return deleteDto;
-                })
-                .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = (User) authentication.getPrincipal();
+
+        Optional<Enterprise> optionalEnterprise = enterpriseRepository.findByOwner(user);
+
+        Enterprise enterprise;
+
+        if (optionalEnterprise.isPresent()) {
+            enterprise = optionalEnterprise.get();
+        } else {
+            enterprise = user.getDependentEnterprise();
+        }
+
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado com esse ID"));
+
+        if (!event.getEnterprise().equals(enterprise)) {
+            throw new IllegalArgumentException("chamado não encontrado com esse ID");
+        }
+
+        eventRepository.delete(event);
+
+        return new EventDTO(event);
     }
 
     public CoordinatesDTO maisProximo (Long id) throws IllegalArgumentException{

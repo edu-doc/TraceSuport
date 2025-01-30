@@ -12,6 +12,9 @@ import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.RolesEnum;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.EnterpriseRepository;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.UserRepository;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.utils.FileUtils;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -40,7 +43,11 @@ public class UserService implements UserDetailsService{
             throw new IllegalFieldException("CPF já cadastrado", "cpf");
         });
 
-        Enterprise enterprise = enterpriseRepository.findById(request.getEnterpriseId()).orElseThrow(() -> {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User authUser = (User) authentication.getPrincipal();
+
+        Enterprise enterprise = enterpriseRepository.findByOwner(authUser).orElseThrow(() -> {
             throw new IllegalFieldException("Empresa não encontrada", "enterpriseId");
         });
 

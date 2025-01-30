@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
-    @NotBlank
+    @NotBlank(message = "O nome não pode ser vazio")
     private String name;
 
     @NotBlank(message = "O email não pode ser vazio")
@@ -28,13 +28,12 @@ public class UserRequestDTO {
     @CPF(message = "O CPF deve ser válido")
     private String cpf;
 
-    @NotNull(message = "O usuario deve ser associado a uma empresa")
-    private Long enterpriseId;
 
-    @NotBlank(message = "A Senha não pode ser vazia")
+    @NotBlank(message = "A senha não pode ser vazia")
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     private String password;
 
+    @NotNull(message = "O funcionario deve ter uma foto")
     private MultipartFile photo;
 }
 

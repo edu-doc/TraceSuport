@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -88,7 +89,27 @@ public class UserService implements UserDetailsService{
     }
 
     public void delete(Long id) {
-        userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User authUser = (User) authentication.getPrincipal();
+
+        Enterprise enterprise = enterpriseRepository.findByOwner(authUser).orElseThrow(() -> {
+            throw new IllegalFieldException("Empresa não encontrada", "enterpriseId");
+        });
+
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        if (user.getRoles().stream().anyMatch(role -> Arrays.asList(RolesEnum.ROLE_ADMIN, RolesEnum.ROLE_CUSTOMER).contains(role.getName()))) {
+            throw new IllegalArgumentException("Não é possível deletar esse usuario");
+        }
+
+        if (authUser.getId() == user.getId()) {
+            throw new IllegalArgumentException("Não é possível deletar o próprio usuário");
+        }
+
+        if (user.getDependentEnterprise().getId() != enterprise.getId()) {
+            throw new IllegalArgumentException("Usuário não encontrado");
+        }
 
         userRepository.deleteById(id);
     }

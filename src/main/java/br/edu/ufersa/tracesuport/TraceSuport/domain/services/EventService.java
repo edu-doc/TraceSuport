@@ -134,7 +134,7 @@ public class EventService {
         List<Event> eventos = eventRepository.findAll();
 
         List<EventComCoordenadas> eventosComCoordenadas = eventos.stream()
-                .filter(evento -> evento.getStatus() == StatusEnum.OPEN)
+                .filter(evento -> evento.getStatus() == StatusEnum.OPEN || evento.getStatus() == StatusEnum.WORKING)
                 .map(evento -> new EventComCoordenadas(evento, new CoordinatesDTO(evento.getLatitude(), evento.getLongitude())))
                 .collect(Collectors.toList());
 

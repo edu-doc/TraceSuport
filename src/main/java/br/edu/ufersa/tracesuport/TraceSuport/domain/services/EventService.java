@@ -1,8 +1,9 @@
 package br.edu.ufersa.tracesuport.TraceSuport.domain.services;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.CoordinatesDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventComCoordenadas;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventComDistancia;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
-import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.CoordenadaComDistancia;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Enterprise;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
@@ -129,31 +130,30 @@ public class EventService {
 
         List<Event> eventos = eventRepository.findAll();
 
-        List<CoordinatesDTO> coordenadas = eventos.stream()
+        List<EventComCoordenadas> eventosComCoordenadas = eventos.stream()
                 .filter(evento -> evento.getStatus() == StatusEnum.OPEN)
-                .map(evento -> new CoordinatesDTO(evento.getLatitude(), evento.getLongitude()))
+                .map(evento -> new EventComCoordenadas(evento, new CoordinatesDTO(evento.getLatitude(), evento.getLongitude())))
                 .collect(Collectors.toList());
 
-        return coordenadasProxima(coordenadaReferencia, coordenadas);
+        return eventosProximos(coordenadaReferencia, eventosComCoordenadas);
     }
 
-    private List<EventDTO> coordenadasProxima(CoordinatesDTO minhaLocalizacao, List<CoordinatesDTO> coordenadas) {
+    private List<EventDTO> eventosProximos(CoordinatesDTO minhaLocalizacao, List<EventComCoordenadas> eventosComCoordenadas) {
 
-        List<CoordenadaComDistancia> coordenadasComDistancia = new ArrayList<>();
+        List<EventComDistancia> eventosComDistancia = new ArrayList<>();
 
-        for (CoordinatesDTO coordenada : coordenadas) {
-            double distancia = calcularDistancia(minhaLocalizacao, coordenada);
-            coordenadasComDistancia.add(new CoordenadaComDistancia(coordenada, distancia));
+        for (EventComCoordenadas eventoComCoordenadas : eventosComCoordenadas) {
+            double distancia = calcularDistancia(minhaLocalizacao, eventoComCoordenadas.getCoordenadas());
+            eventosComDistancia.add(new EventComDistancia(eventoComCoordenadas.getEvent(), distancia));
         }
 
-        coordenadasComDistancia.sort(Comparator.comparingDouble(CoordenadaComDistancia::getDistancia));
+        eventosComDistancia.sort(Comparator.comparingDouble(EventComDistancia::getDistancia));
 
-        List<EventDTO> tresMaisProximas = coordenadasComDistancia.stream()
+        return eventosComDistancia.stream()
                 .limit(3)
-                .map(CoordenadaComDistancia::getCoordenada)
+                .map(EventComDistancia::getEvent)
+                .map(this::toEventDTO) // Converte Event para EventDTO
                 .collect(Collectors.toList());
-
-        return tresMaisProximas;
     }
 
     private double calcularDistancia(CoordinatesDTO dt1, CoordinatesDTO dt2) {
@@ -166,6 +166,21 @@ public class EventService {
                         Math.sin(dLon / 2) * Math.sin(dLon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return RAIO_TERRA_KM * c;
+    }
+
+    private EventDTO toEventDTO(Event event) {
+        return new EventDTO(event.getId(),
+        event.getName(),
+        event.getCity(),
+        event.getDistrict(),
+        event.getAddress(),
+        event.getNumber(),
+        event.getPhone(),
+        event.getLatitude(),
+        event.getLongitude(),
+        event.getDescription(),
+        event.getEnterprise().getId(),
+        event.getStatus());
     }
 
 }

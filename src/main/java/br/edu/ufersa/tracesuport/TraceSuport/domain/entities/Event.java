@@ -1,6 +1,7 @@
 package br.edu.ufersa.tracesuport.TraceSuport.domain.entities;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.StatusEnum;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,6 +56,9 @@ public class Event {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    private StatusEnum status;
+
     @ManyToOne
     @JoinColumn(name = "enterprise_id", nullable = false, referencedColumnName = "id")
     private Enterprise enterprise;
@@ -70,6 +74,7 @@ public class Event {
         setLatitude(eventDTO.getLatitude());
         setLongitude(eventDTO.getLongitude());
         setDescription(eventDTO.getDescription());
+        setStatus(eventDTO.getStatus());
     }
 
     @Override

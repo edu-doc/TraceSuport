@@ -1,6 +1,7 @@
 package br.edu.ufersa.tracesuport.TraceSuport.api.DTO;
 
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.StatusEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,8 @@ public class EventDTO {
 
     private Long enterpriseId;
 
+    private StatusEnum status;
+
     public EventDTO(Event event) {
         setId(event.getId());
         setName(event.getName());
@@ -57,6 +60,7 @@ public class EventDTO {
         setLongitude(event.getLongitude());
         setDescription(event.getDescription());
         setEnterpriseId(event.getEnterprise().getId());
+        setStatus(event.getStatus());
     }
 
 }

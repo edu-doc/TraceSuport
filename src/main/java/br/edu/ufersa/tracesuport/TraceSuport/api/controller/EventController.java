@@ -31,8 +31,8 @@ public class EventController {
     }
 
     @GetMapping("/coordinatesProximas/{id}")
-    public ResponseEntity<?> getCoordinatesProximas(@PathVariable Long id) {
-        return new ResponseEntity<CoordinatesDTO>(eventService.maisProximo(id), HttpStatus.OK);
+    public ResponseEntity<?> getCoordinatesProximas(@PathVariable Double latitude, @PathVariable Double longitude) {
+        return new ResponseEntity<CoordinatesDTO>((CoordinatesDTO) eventService.maisProximo(latitude, longitude), HttpStatus.OK);
     }
 
     @PostMapping

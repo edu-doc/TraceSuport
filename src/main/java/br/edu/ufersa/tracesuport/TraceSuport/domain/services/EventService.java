@@ -2,9 +2,11 @@ package br.edu.ufersa.tracesuport.TraceSuport.domain.services;
 
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.CoordinatesDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response.CoordenadaComDistancia;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Enterprise;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.enums.StatusEnum;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.EnterpriseRepository;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.repositories.EventRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -119,46 +123,41 @@ public class EventService {
         return new EventDTO(event);
     }
 
-    public CoordinatesDTO maisProximo (Long id) throws IllegalArgumentException{
+    public List<CoordinatesDTO> maisProximo(Double lat, Double log) throws IllegalArgumentException {
 
-        Event eventoReferencia = eventRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado com esse ID"));
+        CoordinatesDTO coordenadaReferencia = new CoordinatesDTO(lat, log);
 
-        CoordinatesDTO coordenadaReferencia = new CoordinatesDTO(eventoReferencia.getLatitude(), eventoReferencia.getLongitude());
+        List<Event> eventos = eventRepository.findAll();
 
-        List<CoordinatesDTO> coordenadas = eventRepository.findByEnterprise(eventoReferencia.getEnterprise())
-                .stream()
-                .filter(evento -> !evento.getId().equals(id)) // Excluir o evento de referência da busca
+        List<CoordinatesDTO> coordenadas = eventos.stream()
+                .filter(evento -> evento.getStatus() == StatusEnum.OPEN)
                 .map(evento -> new CoordinatesDTO(evento.getLatitude(), evento.getLongitude()))
                 .collect(Collectors.toList());
 
         return coordenadasProxima(coordenadaReferencia, coordenadas);
     }
 
-    private CoordinatesDTO coordenadasProxima(CoordinatesDTO minhaLocalizacao, List<CoordinatesDTO> coordenadas){
+    private List<CoordinatesDTO> coordenadasProxima(CoordinatesDTO minhaLocalizacao, List<CoordinatesDTO> coordenadas) {
 
-        CoordinatesDTO maisProxima = null;
-        double menorDistancia = Double.MAX_VALUE;
+        List<CoordenadaComDistancia> coordenadasComDistancia = new ArrayList<>();
 
         for (CoordinatesDTO coordenada : coordenadas) {
-            double distancia = calcularDistancia(
-                    minhaLocalizacao,
-                    coordenada
-            );
-
-            if (distancia < menorDistancia) {
-                menorDistancia = distancia;
-                maisProxima = coordenada;
-            }
+            double distancia = calcularDistancia(minhaLocalizacao, coordenada);
+            coordenadasComDistancia.add(new CoordenadaComDistancia(coordenada, distancia));
         }
 
-        return maisProxima;
+        coordenadasComDistancia.sort(Comparator.comparingDouble(CoordenadaComDistancia::getDistancia));
 
+        List<CoordinatesDTO> tresMaisProximas = coordenadasComDistancia.stream()
+                .limit(3)
+                .map(CoordenadaComDistancia::getCoordenada)
+                .collect(Collectors.toList());
+
+        return tresMaisProximas;
     }
 
     private double calcularDistancia(CoordinatesDTO dt1, CoordinatesDTO dt2) {
-
-        final int RAIO_TERRA_KM = 6371; // Raio médio da Terra em km
+        final int RAIO_TERRA_KM = 6371;
 
         double dLat = Math.toRadians(dt2.getLatitude() - dt1.getLatitude());
         double dLon = Math.toRadians(dt2.getLongitude() - dt1.getLongitude());

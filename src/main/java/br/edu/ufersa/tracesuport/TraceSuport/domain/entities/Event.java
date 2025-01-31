@@ -74,10 +74,6 @@ public class Event {
         setLatitude(eventDTO.getLatitude());
         setLongitude(eventDTO.getLongitude());
         setDescription(eventDTO.getDescription());
-        System.out.println(eventDTO.getStatusEnum());
-        StatusEnum statusMod = StatusEnum.valueOf(eventDTO.getStatusEnum());
-        System.out.println(statusMod);
-        setStatus(statusMod);
     }
 
     @Override

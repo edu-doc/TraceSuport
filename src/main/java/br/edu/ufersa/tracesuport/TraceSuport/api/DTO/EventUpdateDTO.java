@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventDTO {
+public class EventUpdateDTO {
 
     private Long id;
 
@@ -45,7 +45,10 @@ public class EventDTO {
 
     private Long enterpriseId;
 
-    public EventDTO(Event event) {
+    @NotBlank
+    private String statusEnum;
+
+    public EventUpdateDTO(Event event) {
         setId(event.getId());
         setName(event.getName());
         setCity(event.getCity());
@@ -57,6 +60,7 @@ public class EventDTO {
         setLongitude(event.getLongitude());
         setDescription(event.getDescription());
         setEnterpriseId(event.getEnterprise().getId());
+        setStatusEnum(String.valueOf(event.getStatus()));
     }
 
 }

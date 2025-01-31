@@ -5,12 +5,11 @@ import java.util.List;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.CoordinatesDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.services.EventService;
 import jakarta.validation.Valid;
-
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventUpdateDTO;
 
 @RestController
 @RequestMapping("/api/v1/event")
@@ -43,7 +42,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEvent(@Valid @RequestBody EventDTO eventDTO, @PathVariable Long id) {
+    public ResponseEntity<?> updateEvent(@Valid @RequestBody EventUpdateDTO eventDTO, @PathVariable Long id) {
         return new ResponseEntity<EventDTO>(eventService.atualizar(eventDTO, id), HttpStatus.OK);
     }    
 

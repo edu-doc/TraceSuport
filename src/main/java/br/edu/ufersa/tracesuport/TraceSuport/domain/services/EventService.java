@@ -4,6 +4,7 @@ import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.CoordinatesDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventComCoordenadas;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventComDistancia;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.EventUpdateDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Enterprise;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.User;
@@ -61,9 +62,9 @@ public class EventService {
 
         Enterprise enterprise = enterpriseRepository.findByOwner(user).get();
 
-        System.out.print(dto.getStatusEnum());
         Event event = new Event(dto);
         event.setEnterprise(enterprise);
+        event.setStatus(StatusEnum.OPEN);
 
         return new EventDTO(eventRepository.save(event));
     }
@@ -74,7 +75,7 @@ public class EventService {
                 .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado"));
     }
 
-    public EventDTO atualizar(EventDTO dto, Long id) throws IllegalArgumentException {
+    public EventDTO atualizar(EventUpdateDTO dto, Long id) throws IllegalArgumentException {
         Event event = eventRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("chamado não encontrado com esse ID"));
 
@@ -87,6 +88,7 @@ public class EventService {
         event.setAddress(dto.getAddress());
         event.setNumber(dto.getNumber());
         event.setPhone(dto.getPhone());
+        event.setStatus(StatusEnum.valueOf(dto.getStatusEnum()));
 
         return new EventDTO(eventRepository.save(event));
     }
@@ -153,7 +155,7 @@ public class EventService {
         return eventosComDistancia.stream()
                 .limit(3)
                 .map(EventComDistancia::getEvent)
-                .map(this::toEventDTO) // Converte Event para EventDTO
+                .map(this::toEventDTO)
                 .collect(Collectors.toList());
     }
 
@@ -180,8 +182,7 @@ public class EventService {
         event.getLatitude(),
         event.getLongitude(),
         event.getDescription(),
-        event.getEnterprise().getId(),
-        String.valueOf(event.getStatus()));
+        event.getEnterprise().getId());
     }
 
 }

@@ -46,7 +46,8 @@ public class EventDTO {
 
     private Long enterpriseId;
 
-    private StatusEnum status;
+    @NotNull
+    private String StatusEnum;
 
     public EventDTO(Event event) {
         setId(event.getId());
@@ -60,7 +61,7 @@ public class EventDTO {
         setLongitude(event.getLongitude());
         setDescription(event.getDescription());
         setEnterpriseId(event.getEnterprise().getId());
-        setStatus(event.getStatus());
+        setStatusEnum(String.valueOf(event.getStatus()));
     }
 
 }

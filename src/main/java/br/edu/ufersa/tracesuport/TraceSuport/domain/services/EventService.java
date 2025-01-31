@@ -59,8 +59,9 @@ public class EventService {
 
         User user = (User) authentication.getPrincipal();
 
-        Enterprise enterprise = enterpriseRepository.findByOwner(user).get(); 
+        Enterprise enterprise = enterpriseRepository.findByOwner(user).get();
 
+        System.out.print(dto.getStatusEnum());
         Event event = new Event(dto);
         event.setEnterprise(enterprise);
 
@@ -180,7 +181,7 @@ public class EventService {
         event.getLongitude(),
         event.getDescription(),
         event.getEnterprise().getId(),
-        event.getStatus());
+        String.valueOf(event.getStatus()));
     }
 
 }

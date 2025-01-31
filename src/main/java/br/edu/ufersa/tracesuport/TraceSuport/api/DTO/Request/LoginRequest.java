@@ -19,6 +19,5 @@ public class LoginRequest {
     private String email;
   
     @NotBlank
-    @Min(6)
     private String password;
 }

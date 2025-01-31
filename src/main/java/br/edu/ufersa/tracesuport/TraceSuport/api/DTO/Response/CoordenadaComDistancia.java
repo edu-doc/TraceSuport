@@ -1,18 +1,18 @@
 package br.edu.ufersa.tracesuport.TraceSuport.api.DTO.Response;
 
-import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.CoordinatesDTO;
+import br.edu.ufersa.tracesuport.TraceSuport.domain.entities.Event;
 
 public class CoordenadaComDistancia {
 
-    private final CoordinatesDTO coordenada;
+    private final Event coordenada;
     private final double distancia;
 
-    public CoordenadaComDistancia(CoordinatesDTO coordenada, double distancia) {
+    public CoordenadaComDistancia(Event coordenada, double distancia) {
         this.coordenada = coordenada;
         this.distancia = distancia;
     }
 
-    public CoordinatesDTO getCoordenada() {
+    public Event getCoordenada() {
         return coordenada;
     }
 

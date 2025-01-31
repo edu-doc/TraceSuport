@@ -123,7 +123,7 @@ public class EventService {
         return new EventDTO(event);
     }
 
-    public List<CoordinatesDTO> maisProximo(Double lat, Double log) throws IllegalArgumentException {
+    public List<EventDTO> maisProximo(Double lat, Double log) throws IllegalArgumentException {
 
         CoordinatesDTO coordenadaReferencia = new CoordinatesDTO(lat, log);
 
@@ -137,7 +137,7 @@ public class EventService {
         return coordenadasProxima(coordenadaReferencia, coordenadas);
     }
 
-    private List<CoordinatesDTO> coordenadasProxima(CoordinatesDTO minhaLocalizacao, List<CoordinatesDTO> coordenadas) {
+    private List<EventDTO> coordenadasProxima(CoordinatesDTO minhaLocalizacao, List<CoordinatesDTO> coordenadas) {
 
         List<CoordenadaComDistancia> coordenadasComDistancia = new ArrayList<>();
 
@@ -148,7 +148,7 @@ public class EventService {
 
         coordenadasComDistancia.sort(Comparator.comparingDouble(CoordenadaComDistancia::getDistancia));
 
-        List<CoordinatesDTO> tresMaisProximas = coordenadasComDistancia.stream()
+        List<EventDTO> tresMaisProximas = coordenadasComDistancia.stream()
                 .limit(3)
                 .map(CoordenadaComDistancia::getCoordenada)
                 .collect(Collectors.toList());

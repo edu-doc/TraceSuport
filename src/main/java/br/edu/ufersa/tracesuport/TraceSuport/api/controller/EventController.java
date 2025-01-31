@@ -5,6 +5,8 @@ import java.util.List;
 import br.edu.ufersa.tracesuport.TraceSuport.api.DTO.CoordinatesDTO;
 import br.edu.ufersa.tracesuport.TraceSuport.domain.services.EventService;
 import jakarta.validation.Valid;
+
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +32,8 @@ public class EventController {
         return new ResponseEntity<EventDTO>(eventService.get(id), HttpStatus.OK);
     }
 
-    @GetMapping("/coordinatesProximas/{id}")
-    public ResponseEntity<?> getCoordinatesProximas(@PathVariable Double latitude, @PathVariable Double longitude) {
+    @GetMapping("/coordinatesProximas")
+    public ResponseEntity<?> getCoordinatesProximas(@RequestParam double latitude , @RequestParam double longitude) {
         return new ResponseEntity<CoordinatesDTO>((CoordinatesDTO) eventService.maisProximo(latitude, longitude), HttpStatus.OK);
     }
 

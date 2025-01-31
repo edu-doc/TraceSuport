@@ -182,7 +182,9 @@ public class EventService {
         event.getLatitude(),
         event.getLongitude(),
         event.getDescription(),
-        event.getEnterprise().getId());
+        event.getStatus().name(),
+        event.getEnterprise().getId()
+        );
     }
 
 }

@@ -43,6 +43,8 @@ public class EventDTO {
     @NotBlank
     private String description;
 
+    private String status;
+
     private Long enterpriseId;
 
     public EventDTO(Event event) {
@@ -57,6 +59,7 @@ public class EventDTO {
         setLongitude(event.getLongitude());
         setDescription(event.getDescription());
         setEnterpriseId(event.getEnterprise().getId());
+        setStatus(event.getStatus().name());
     }
 
 }

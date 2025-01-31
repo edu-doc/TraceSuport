@@ -88,7 +88,7 @@ public class EventService {
         event.setAddress(dto.getAddress());
         event.setNumber(dto.getNumber());
         event.setPhone(dto.getPhone());
-        event.setStatus(StatusEnum.valueOf(dto.getStatusEnum()));
+        event.setStatus(StatusEnum.valueOf(dto.getStatus()));
 
         return new EventDTO(eventRepository.save(event));
     }
